@@ -1,17 +1,17 @@
 import pandas as pd
-import streamlit as st
 import numpy as np
 from catboost import CatBoostClassifier
 import pickle
+import os
 
-google_sheets_url = st.secrets["public_gsheets_url"]
+google_sheets_url = os.getenv('PUBLIC_GSHEETS_URL')
 file_name = 'ss4_urban'
 
 def fetch():
 
     if google_sheets_url:
         def load_data(sheets_url, save_path):
-            csv_url = sheets_url.replace("/edit#gid=", "/export?format=csv&gid=")
+            csv_url = sheets_url.replace('/edit#gid=", "/export?format=csv&gid=')
             df = pd.read_csv(csv_url)
             df.to_csv(save_path, index=False)
             
