@@ -11,7 +11,7 @@ def fetch():
 
     if google_sheets_url:
         def load_data(sheets_url, save_path):
-            csv_url = sheets_url.replace('/edit#gid=", "/export?format=csv&gid=')
+            csv_url = sheets_url.replace('/edit#gid=', '/export?format=csv&gid=')
             df = pd.read_csv(csv_url)
             df.to_csv(save_path, index=False)
             
