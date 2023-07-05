@@ -2,8 +2,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
-import studentinfo
-import helper
+import utils.studentinfo as studentinfo
+import utils.helper as helper
 
 st.set_page_config(
     page_title="Prediction - Kronos PVP Report",
@@ -19,7 +19,7 @@ hide_streamlit_style = """
                     padding-bottom: 2rem;
                     padding-left: 0rem;
                     padding-right: 0rem;
-                    overflow-x: hidden;
+                    overflow-x: clip;
                 }
             .css-1oe5cao {
                     max-height: 66vh;

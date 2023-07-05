@@ -1,6 +1,7 @@
 import streamlit as st
-import pandas as pd
-import helper
+import utils.helper as helper
+import utils.cardgen as cardgen
+import random
 
 st.set_page_config(
     page_title="Kronos PVP Report",
@@ -16,7 +17,7 @@ hide_streamlit_style = """
                     padding-bottom: 2rem;
                     padding-left: 0rem;
                     padding-right: 0rem;
-                    overflow-x: hidden;
+                    overflow-x: clip;
                 }
             .css-1oe5cao {
                     max-height: 66vh;
@@ -35,8 +36,24 @@ st.write(
 
 st.subheader("A data-driven analysis of Blue Archive Tactical Challenge")
 
-st.markdown(
-    """
-    The goal is to analyze recorded pvp matches and provide insight to the meta of Blue Archive arena.
-"""
-)
+st.write("")
+st.write("")
+st.write("")
+st.write("")
+
+with st.container():
+    col1, col2, col3 = st.columns([1,1,1])
+    with col1:
+        cardgen.get_random_card()
+        cardgen.get_random_card()
+        cardgen.get_random_card()
+    with col2:
+        cardgen.get_random_card()
+        cardgen.get_random_card()
+        cardgen.get_random_card()
+    with col3:
+        cardgen.get_random_card()
+        cardgen.get_random_card()
+        cardgen.get_random_card()
+
+    helper.style_metric_cards(border_left_color='#' + ''.join(random.choices('0123456789ABCDEF', k=6)))

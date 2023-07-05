@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
 import datasets.model_builder as model_builder
-import helper
+import utils.helper as helper
+import utils.calc as calc
 
 st.set_page_config(
     page_title="Dataset - Kronos PVP Report",
@@ -17,7 +18,7 @@ hide_streamlit_style = """
                     padding-bottom: 2rem;
                     padding-left: 0rem;
                     padding-right: 0rem;
-                    overflow-x: hidden;
+                    overflow-x: clip;
                 }
             .css-1oe5cao {
                     max-height: 66vh;
@@ -38,6 +39,7 @@ dataframe = st.dataframe(data, height=410)
 @st.cache_data(ttl=600)
 def fetch_and_train():
     model_builder.fetch()
+    calc.recalculate()
 
 if st.button(":green[Fetch Data]"):
     st.cache_data.clear()

@@ -1,5 +1,5 @@
 import streamlit as st
-import helper
+import utils.helper as helper
 
 st.set_page_config(
     page_title="Auto Draft - Kronos PVP Report",
@@ -15,7 +15,7 @@ hide_streamlit_style = """
                     padding-bottom: 2rem;
                     padding-left: 0rem;
                     padding-right: 0rem;
-                    overflow-x: hidden;
+                    overflow-x: clip;
                 }
             .css-1oe5cao {
                     max-height: 66vh;
