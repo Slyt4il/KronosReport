@@ -8,13 +8,14 @@ st.set_page_config(
 
 hide_streamlit_style = """
             <style>
-            
+            #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
             .block-container {
                     padding-top: 2rem;
                     padding-bottom: 2rem;
                     padding-left: 0rem;
                     padding-right: 0rem;
+                    overflow-x: hidden;
                 }
             .css-1oe5cao {
                     max-height: 66vh;

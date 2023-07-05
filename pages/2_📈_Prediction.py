@@ -19,6 +19,7 @@ hide_streamlit_style = """
                     padding-bottom: 2rem;
                     padding-left: 0rem;
                     padding-right: 0rem;
+                    overflow-x: hidden;
                 }
             .css-1oe5cao {
                     max-height: 66vh;
