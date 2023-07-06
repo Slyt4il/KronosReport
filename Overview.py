@@ -1,7 +1,6 @@
 import streamlit as st
 import utils.helper as helper
 import utils.cardgen as cardgen
-import random
 
 st.set_page_config(
     page_title="Kronos PVP Report",
@@ -12,6 +11,7 @@ hide_streamlit_style = """
             <style>
             #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
+            button[title="View fullscreen"] {visibility: hidden;}
             .block-container {
                     padding-top: 2rem;
                     padding-bottom: 2rem;
@@ -41,12 +41,20 @@ st.write("")
 st.write("")
 st.write("")
 
+cardgen.refresh_cards()
+
 col1, col2 = st.columns([1,1])
 with col1:
     cardgen.get_random_card()
+    st.write('')
     cardgen.get_random_card()
+    st.write('')
     cardgen.get_random_card()
+    st.write('')
 with col2:
     cardgen.get_random_card()
+    st.write('')
     cardgen.get_random_card()
+    st.write('')
     cardgen.get_random_card()
+    st.write('')

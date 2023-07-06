@@ -13,6 +13,7 @@ hide_streamlit_style = """
             <style>
             #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
+            button[title="View fullscreen"] {visibility: hidden;}
             .block-container {
                     padding-top: 2rem;
                     padding-bottom: 2rem;
