@@ -17,9 +17,11 @@ def split_df(df):
 df = pd.DataFrame(data)
 df_atk, df_def = split_df(df)
 
-def update(data, df):
+def update():
+    global data, df, df_atk, df_def
     data = pd.read_csv('datasets/' + file_name + '.csv')
     df = pd.DataFrame(data)
+    df_atk, df_def = split_df(df)
 
 
 def calculate_ratings(df):
@@ -46,7 +48,7 @@ def calculate_ratings(df):
     return ratings
 
 def recalculate():
-    update(data, df)
+    update()
     calculate_ratings(df)
 
 student_ratings = calculate_ratings(df)
@@ -57,16 +59,15 @@ def get_ratings():
 
 
 def def_positional_winrate(student, pos):
-    student = helper.escape_student(student)
-    d1_wr = round((((df_def['d1'].str.contains(student)) & (df_def['attacker_won'] == 0)).sum() / (df_def['d1'].str.contains(student)).sum()) * 100, 2)
-    d2_wr = round((((df_def['d2'].str.contains(student)) & (df_def['attacker_won'] == 0)).sum() / (df_def['d2'].str.contains(student)).sum()) * 100, 2)
-    d3_wr = round((((df_def['d3'].str.contains(student)) & (df_def['attacker_won'] == 0)).sum() / (df_def['d3'].str.contains(student)).sum()) * 100, 2)
-    d4_wr = round((((df_def['d4'].str.contains(student)) & (df_def['attacker_won'] == 0)).sum() / (df_def['d4'].str.contains(student)).sum()) * 100, 2)
+    d1_wr = round(duckdb.sql(f"SELECT (COUNT(CASE WHEN d1 = '{student}' AND attacker_won = 0 THEN 1 END) * 100.0) / COUNT(CASE WHEN d1 = '{student}' THEN 1 END) FROM df_def;").fetchone()[0], 2)
+    d2_wr = round(duckdb.sql(f"SELECT (COUNT(CASE WHEN d2 = '{student}' AND attacker_won = 0 THEN 1 END) * 100.0) / COUNT(CASE WHEN d2 = '{student}' THEN 1 END) FROM df_def;").fetchone()[0], 2)
+    d3_wr = round(duckdb.sql(f"SELECT (COUNT(CASE WHEN d3 = '{student}' AND attacker_won = 0 THEN 1 END) * 100.0) / COUNT(CASE WHEN d3 = '{student}' THEN 1 END) FROM df_def;").fetchone()[0], 2)
+    d4_wr = round(duckdb.sql(f"SELECT (COUNT(CASE WHEN d4 = '{student}' AND attacker_won = 0 THEN 1 END) * 100.0) / COUNT(CASE WHEN d4 = '{student}' THEN 1 END) FROM df_def;").fetchone()[0], 2)
     wr = [d1_wr, d2_wr, d3_wr, d4_wr]
     target = wr[int(pos[-1])-1]
     wr.remove(target)
     delta = round(target - (sum(wr) / len(wr)), 2)
-    count = df_def[pos].str.count(student).sum()
+    count = duckdb.sql(f"SELECT COUNT({pos}) FROM df_def WHERE {pos} = '{student}';").fetchone()[0]
     return target , delta, count
 
 def strongest_specials_duo(student):
@@ -74,15 +75,12 @@ def strongest_specials_duo(student):
     candidates.remove(student)
     strongest_candidate = 'None'
     strongest_candidate_wr = 0
-    matches = 0
+    apps = 0
     for candidate in candidates:
-        global df_atk, df_def
-        d_atk = df_atk.drop(['a1', 'a2', 'a3', 'a4'], axis=1)
-        d_def = df_def.drop(['d1', 'd2', 'd3', 'd4'], axis=1)
-        atk_count = duckdb.sql(f"SELECT COUNT(*) FROM d_atk WHERE (a5 = '{student}' OR a6 = '{student}') AND (a5 = '{candidate}' OR a6 = '{candidate}');").fetchone()[0]
-        atk_wins = duckdb.sql(f"SELECT COUNT(*) FROM d_atk WHERE (a5 = '{student}' OR a6 = '{student}') AND (a5 = '{candidate}' OR a6 = '{candidate}') AND attacker_won = 1;").fetchone()[0]
-        def_count = duckdb.sql(f"SELECT COUNT(*) FROM d_def WHERE (d5 = '{student}' OR d6 = '{student}') AND (d5 = '{candidate}' OR d6 = '{candidate}');").fetchone()[0]
-        def_wins = duckdb.sql(f"SELECT COUNT(*) FROM d_def WHERE (d5 = '{student}' OR d6 = '{student}') AND (d5 = '{candidate}' OR d6 = '{candidate}') AND attacker_won = 0;").fetchone()[0]
+        atk_count = duckdb.sql(f"SELECT COUNT(*) FROM df_atk WHERE (a5 = '{student}' OR a6 = '{student}') AND (a5 = '{candidate}' OR a6 = '{candidate}');").fetchone()[0]
+        atk_wins = duckdb.sql(f"SELECT COUNT(*) FROM df_atk WHERE (a5 = '{student}' OR a6 = '{student}') AND (a5 = '{candidate}' OR a6 = '{candidate}') AND attacker_won = 1;").fetchone()[0]
+        def_count = duckdb.sql(f"SELECT COUNT(*) FROM df_def WHERE (d5 = '{student}' OR d6 = '{student}') AND (d5 = '{candidate}' OR d6 = '{candidate}');").fetchone()[0]
+        def_wins = duckdb.sql(f"SELECT COUNT(*) FROM df_def WHERE (d5 = '{student}' OR d6 = '{student}') AND (d5 = '{candidate}' OR d6 = '{candidate}') AND attacker_won = 0;").fetchone()[0]
         wr = round(((atk_wins + def_wins) / (atk_count + def_count)) * 100, 2) if (atk_count + def_count) > 0 else 0
         if wr > strongest_candidate_wr:
             strongest_candidate_wr = wr
