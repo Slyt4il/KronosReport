@@ -12,4 +12,12 @@ def get_random_card():
     delta = str(delta) + '%'
     delta_color = 'normal'
     help = '{} {}\'s winrates compared to her nominal value.'.format(helper.convert_readable(pos), helper.convert_readable(student))
-    return st.metric(label, value, delta=delta, delta_color=delta_color, help=help, label_visibility="visible")
+    card = st.container()
+    with card:
+        col1, col2 = st.columns([1,1.5])
+        with col1:
+            st.image('images/card/card_shun.png')
+        with col2:
+            st.metric(label, value, delta=delta, delta_color=delta_color, help=help, label_visibility="visible")
+        st.write('')
+    return card

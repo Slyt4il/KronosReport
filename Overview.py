@@ -41,19 +41,12 @@ st.write("")
 st.write("")
 st.write("")
 
-with st.container():
-    col1, col2, col3 = st.columns([1,1,1])
-    with col1:
-        cardgen.get_random_card()
-        cardgen.get_random_card()
-        cardgen.get_random_card()
-    with col2:
-        cardgen.get_random_card()
-        cardgen.get_random_card()
-        cardgen.get_random_card()
-    with col3:
-        cardgen.get_random_card()
-        cardgen.get_random_card()
-        cardgen.get_random_card()
-
-    helper.style_metric_cards(border_left_color='#' + ''.join(random.choices('0123456789ABCDEF', k=6)))
+col1, col2 = st.columns([1,1])
+with col1:
+    cardgen.get_random_card()
+    cardgen.get_random_card()
+    cardgen.get_random_card()
+with col2:
+    cardgen.get_random_card()
+    cardgen.get_random_card()
+    cardgen.get_random_card()
