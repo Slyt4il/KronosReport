@@ -36,3 +36,6 @@ def train():
     clf.fit(X, Y)
 
     pickle.dump(clf, open('datasets/' + file_name + '_clf.pkl', 'wb'))
+
+if not os.path.exists('datasets/' + file_name + '.csv') or not os.path.exists('datasets/' + file_name + '_clf.pkl'):
+    fetch()
