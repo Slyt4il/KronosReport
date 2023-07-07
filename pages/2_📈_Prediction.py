@@ -31,7 +31,7 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 st.sidebar.subheader("PVP Season: 4 🏙️ (Urban)")
 
 st.header("PVP Result Prediction")
-st.info('**This is a statistical prediction and not a simulation.** There are many factors that affect the result of pvp matches.', icon="ℹ️")
+st.info('**This is a statistical prediction not a simulation.** There are many unpredictable factors that can affect the result of pvp matches.', icon="ℹ️")
 
 def user_input_features():
     strikers_options = list(studentinfo.get_keys_strikers())
@@ -92,6 +92,8 @@ prob = model.predict_proba(df)
 st.subheader('Prediction result')
 if input_df is not None:
     if pred == 1:
-        st.write('⚔️ **Attackers** would win ', round(prob[0][1] * 100, 2), '% of the time!')
+        st.write(f'⚔️ **:orange[Attackers]** will emerge victorious!')
+        st.caption(f'*{round(prob[0][1] * 100, 2)}% confidence*')
     else:
-        st.write('🛡️ **Defenders** would win', round(prob[0][0] * 100, 2), '% of the time!')
+        st.write('🛡️ **:blue[Defenders]** will emerge victorious!')
+        st.caption(f'*{round(prob[0][0] * 100, 2)}% confidence*')
