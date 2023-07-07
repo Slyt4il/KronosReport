@@ -24,11 +24,11 @@ def def_position(args):
 def strongest_duo(args):
     student = args
     label = '{}\'s Strongest Duo'.format(helper.convert_readable(student))
-    value, delta, apps = calc.strongest_specials_duo(student)
+    value, delta, wr, apps = calc.strongest_specials_duo(student)
     value = helper.convert_readable(value)
-    delta = str(delta) + '%'
+    delta = str(delta) + 'pts'
     delta_color = 'off'
-    help = '{}\'s winrate is highest when paired with {}. They appeared {} times together.'.format(helper.convert_readable(student), value, apps)
+    help = '{}\'s is most effective when paired with {}. They appeared {} times together and have a {}% winrate.'.format(helper.convert_readable(student), value, apps, wr)
     card = st.container()
     with card:
         col1, col2 = st.columns([1,1.5])

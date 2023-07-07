@@ -27,7 +27,7 @@ def update():
 def calculate_ratings(df):
     ratings = []
 
-    total_students = df.shape[0] * 2
+    total_teams = df.shape[0] * 2
     all_students = studentinfo.get_list_all()
     for student in all_students:
         escaped_student = helper.escape_student(student)
@@ -39,7 +39,7 @@ def calculate_ratings(df):
         def_wins = df_def[(df_def['attacker_won'] == 0)].stack().str.count(escaped_student).sum()
         def_win_rate = round(def_wins / def_count, 4) if def_count > 0 else 0
         pick_count = int(atk_count + def_count)
-        pick_rate = round(pick_count / total_students, 4)
+        pick_rate = round(pick_count / total_teams, 4)
         win_count = int(atk_wins + def_wins)
         win_rate = round(win_count / pick_count, 4)
 
@@ -75,15 +75,24 @@ def strongest_specials_duo(student):
     candidates.remove(student)
     strongest_candidate = 'None'
     strongest_candidate_wr = 0
+    strongest_candidate_score = 0
     apps = 0
     for candidate in candidates:
+        atk_ex_count = duckdb.sql(f"SELECT COUNT(*) FROM df_atk WHERE (a5 = '{student}' OR a6 = '{student}');").fetchone()[0]
+        def_ex_count = duckdb.sql(f"SELECT COUNT(*) FROM df_def WHERE (d5 = '{student}' OR d6 = '{student}');").fetchone()[0]
         atk_count = duckdb.sql(f"SELECT COUNT(*) FROM df_atk WHERE (a5 = '{student}' OR a6 = '{student}') AND (a5 = '{candidate}' OR a6 = '{candidate}');").fetchone()[0]
         atk_wins = duckdb.sql(f"SELECT COUNT(*) FROM df_atk WHERE (a5 = '{student}' OR a6 = '{student}') AND (a5 = '{candidate}' OR a6 = '{candidate}') AND attacker_won = 1;").fetchone()[0]
         def_count = duckdb.sql(f"SELECT COUNT(*) FROM df_def WHERE (d5 = '{student}' OR d6 = '{student}') AND (d5 = '{candidate}' OR d6 = '{candidate}');").fetchone()[0]
         def_wins = duckdb.sql(f"SELECT COUNT(*) FROM df_def WHERE (d5 = '{student}' OR d6 = '{student}') AND (d5 = '{candidate}' OR d6 = '{candidate}') AND attacker_won = 0;").fetchone()[0]
-        wr = round(((atk_wins + def_wins) / (atk_count + def_count)) * 100, 2) if (atk_count + def_count) > 0 else 0
-        if wr > strongest_candidate_wr:
-            strongest_candidate_wr = wr
+        count = atk_count + def_count
+        ex_count = atk_ex_count + def_ex_count
+        wr = round((atk_wins + def_wins) / (count), 4) if (count) > 0 else 0
+        pr = round(count / ex_count, 2)
+        score = int(2000 * wr * pr)
+        if score > strongest_candidate_score:
+            strongest_candidate_wr = round(wr * 100, 2)
+            strongest_candidate_score = score
             strongest_candidate = candidate
-            apps = atk_count + def_count
-    return strongest_candidate, strongest_candidate_wr, apps
+            apps = count
+            
+    return strongest_candidate, strongest_candidate_score, strongest_candidate_wr, apps
