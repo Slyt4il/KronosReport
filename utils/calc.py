@@ -86,7 +86,7 @@ def strongest_specials_duo(student):
         def_wins = duckdb.sql(f"SELECT COUNT(*) FROM df_def WHERE (d5 = '{student}' OR d6 = '{student}') AND (d5 = '{candidate}' OR d6 = '{candidate}') AND attacker_won = 0;").fetchone()[0]
         count = atk_count + def_count
         ex_count = atk_ex_count + def_ex_count
-        wr = round((atk_wins + def_wins) / (count), 4) if (count) > 0 else 0
+        wr = round((atk_wins + def_wins) / (count), 4) if count > 0 else 0
         pr = round(count / ex_count, 2)
         score = int(2000 * wr * pr)
         if score > strongest_candidate_score:
@@ -96,3 +96,12 @@ def strongest_specials_duo(student):
             apps = count
             
     return strongest_candidate, strongest_candidate_score, strongest_candidate_wr, apps
+
+def teams_without(student):
+    atk_wo_student = duckdb.sql(f"SELECT COUNT(*) FROM df_atk WHERE a1 != '{student}' AND a2 != '{student}' AND a3 != '{student}' AND a4 != '{student}' AND a5 != '{student}' AND a6 != '{student}';").fetchone()[0]
+    atk_wwo_student = duckdb.sql(f"SELECT COUNT(*) FROM df_atk WHERE a1 != '{student}' AND a2 != '{student}' AND a3 != '{student}' AND a4 != '{student}' AND a5 != '{student}' AND a6 != '{student}' AND attacker_won = 1;").fetchone()[0]
+    def_wo_student = duckdb.sql(f"SELECT COUNT(*) FROM df_def WHERE d1 != '{student}' AND d2 != '{student}' AND d3 != '{student}' AND d4 != '{student}' AND d5 != '{student}' AND d6 != '{student}';").fetchone()[0]
+    def_wwo_student = duckdb.sql(f"SELECT COUNT(*) FROM df_def WHERE d1 != '{student}' AND d2 != '{student}' AND d3 != '{student}' AND d4 != '{student}' AND d5 != '{student}' AND d6 != '{student}' AND attacker_won = 0;").fetchone()[0]
+    wo_student = atk_wo_student + def_wo_student
+    wrwo_student = round(((atk_wwo_student + def_wwo_student) / wo_student) * 100, 2) if wo_student > 0 else 0
+    return wo_student, wrwo_student

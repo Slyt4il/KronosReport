@@ -38,6 +38,23 @@ def strongest_duo(args):
             st.metric(label, value, delta=delta, delta_color=delta_color, help=help, label_visibility="visible")
     return card
 
+def teams_without(args):
+    student = args
+    label = 'Teams Without {}'.format(helper.convert_readable(student))
+    value, delta = calc.teams_without(student)
+    value = str(value)
+    delta = str(delta) + '%'
+    delta_color = 'off'
+    help = 'There are {} teams without {}. Teams without the student have a {} winrate.'.format(value, helper.convert_readable(student), delta)
+    card = st.container()
+    with card:
+        col1, col2 = st.columns([1,1.5])
+        with col1:
+            st.image('images/card/card_{}.png'.format(student))
+        with col2:
+            st.metric(label, value, delta=delta, delta_color=delta_color, help=help, label_visibility="visible")
+    return card
+
 #################################################################
 
 all_cards = [
@@ -71,6 +88,9 @@ all_cards = [
     (strongest_duo, 'utaha'),
     (strongest_duo, 'serina'),
     (strongest_duo, 'nodoka_(hot_spring)'),
+    (teams_without, 'shun'),
+    (teams_without, 'yuuka'),
+    (teams_without, 'iroha'),
 ]
 
 cards = all_cards.copy()
