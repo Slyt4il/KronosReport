@@ -32,7 +32,7 @@ def train():
     X = df.drop(columns_to_drop, axis=1)
     Y = df[target]
 
-    clf = CatBoostClassifier(cat_features=['a1','a2','a3','a4','a5','d1','d2','d3','d4','d5'], iterations=250)
+    clf = CatBoostClassifier(cat_features=['a1','a2','a3','a4','a5','d1','d2','d3','d4','d5'], iterations=300)
     clf.fit(X, Y)
 
     pickle.dump(clf, open('datasets/' + file_name + '_clf.pkl', 'wb'))

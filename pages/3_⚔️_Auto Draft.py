@@ -84,10 +84,11 @@ model = pickle.load(open('datasets/' + file_name + '_clf.pkl', 'rb'))
 
 pred = model.predict(df)
 prob = pd.DataFrame(model.predict_proba(df))
+prob.columns = prob.columns.astype(str)
 
 st.subheader('Best teams to break the formation')
 if not invalid:
-    results = pd.concat([students, prob], axis=1).drop(0, axis=1)
-    sorted_df = results.sort_values(by=1, ascending=False).drop_duplicates()
+    results = pd.concat([students, prob], axis=1).drop('0', axis=1)
+    sorted_df = results.sort_values(by='1', ascending=False).drop_duplicates()
     top = sorted_df.head(5)
     st.table(top)

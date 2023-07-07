@@ -68,7 +68,7 @@ def def_positional_winrate(student, pos):
     wr.remove(target)
     delta = round(target - (sum(wr) / len(wr)), 2)
     count = duckdb.sql(f"SELECT COUNT({pos}) FROM df_def WHERE {pos} = '{student}';").fetchone()[0]
-    return target , delta, count
+    return target, delta, count
 
 def strongest_specials_duo(student):
     candidates = list(studentinfo.get_keys_specials())
