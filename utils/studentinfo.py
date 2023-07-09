@@ -31,11 +31,15 @@ strikers = {
 }
 
 specials = {
+    'akane_(bunny)': 20019,
+    'ako': 20008,
     'ayane_(swimsuit)': 26007,
+    'fuuka': 23001,
     'hibiki': 20000,
     'himari': 20020,
     'iroha': 20016,
     'karin': 20001,
+    'mashiro': 20003,
     'mashiro_(swimsuit)': 20004,
     'nodoka_(hot_spring)': 20010,
     'serina': 26003,

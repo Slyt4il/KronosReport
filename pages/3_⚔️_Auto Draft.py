@@ -48,8 +48,8 @@ def user_input_features():
         d4 = st.selectbox('Position D4', strikers_options, index = 22, format_func=helper.convert_readable)
         
     with col2:
-        d5 = st.selectbox('Special D1', specials_options, index = 3, format_func=helper.convert_readable)
-        d6 = st.selectbox('Special D2', specials_options, index = 9, format_func=helper.convert_readable)
+        d5 = st.selectbox('Special D1', specials_options, index = 6, format_func=helper.convert_readable)
+        d6 = st.selectbox('Special D2', specials_options, index = 13, format_func=helper.convert_readable)
         
     data = {'d1': d1, 'd2': d2, 'd3': d3, 'd4': d4, 'd5': d5, 'd6': d6}
 
@@ -87,8 +87,12 @@ prob = pd.DataFrame(model.predict_proba(df))
 prob.columns = prob.columns.astype(str)
 
 st.subheader('Best teams to break the formation')
+
+def path_to_image_html(path):
+    return '<img src="'+ path + '" width="60">'
+
 if not invalid:
-    results = pd.concat([students, prob], axis=1).drop('0', axis=1)
+    results = pd.concat([students.applymap(helper.convert_readable), prob.applymap(lambda num: "{:.2%}".format(num))], axis=1).drop('0', axis=1)
     sorted_df = results.sort_values(by='1', ascending=False).drop_duplicates()
     top = sorted_df.head(5)
     st.table(top)

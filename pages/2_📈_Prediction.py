@@ -45,8 +45,8 @@ def user_input_features():
         a3 = st.selectbox('Position A3', strikers_options, index = 8, format_func=helper.convert_readable)
         a4 = st.selectbox('Position A4', strikers_options, index = 27, format_func=helper.convert_readable)
     with col2:
-        a5 = st.selectbox('Special A1', specials_options, index = 3, format_func=helper.convert_readable)
-        a6 = st.selectbox('Special A2', specials_options, index = 9, format_func=helper.convert_readable)
+        a5 = st.selectbox('Special A1', specials_options, index = 6, format_func=helper.convert_readable)
+        a6 = st.selectbox('Special A2', specials_options, index = 13, format_func=helper.convert_readable)
 
     with col3:
         d1 = st.selectbox('Position D1', strikers_options, index = 27, format_func=helper.convert_readable)
@@ -55,8 +55,8 @@ def user_input_features():
         d4 = st.selectbox('Position D4', strikers_options, index = 22, format_func=helper.convert_readable)
         
     with col4:
-        d5 = st.selectbox('Special D1', specials_options, index = 3, format_func=helper.convert_readable)
-        d6 = st.selectbox('Special D2', specials_options, index = 9, format_func=helper.convert_readable)
+        d5 = st.selectbox('Special D1', specials_options, index = 6, format_func=helper.convert_readable)
+        d6 = st.selectbox('Special D2', specials_options, index = 13, format_func=helper.convert_readable)
         
     data = {'a1': a1, 'a2': a2, 'a3': a3, 'a4': a4, 'a5': a5, 'a6': a6,
             'd1': d1, 'd2': d2, 'd3': d3, 'd4': d4, 'd5': d5, 'd6': d6}

@@ -39,9 +39,9 @@ def calculate_ratings(df):
         def_wins = df_def[(df_def['attacker_won'] == 0)].stack().str.count(escaped_student).sum()
         def_win_rate = round(def_wins / def_count, 4) if def_count > 0 else 0
         pick_count = int(atk_count + def_count)
-        pick_rate = round(pick_count / total_teams, 4)
+        pick_rate = round(pick_count / total_teams, 4) if total_teams > 0 else 0
         win_count = int(atk_wins + def_wins)
-        win_rate = round(win_count / pick_count, 4)
+        win_rate = round(win_count / pick_count, 4) if pick_count > 0 else 0
 
         rating = int((500 * pick_rate) + (1000 * win_rate * pick_rate))
         ratings.append([student, pick_count, pick_rate, win_count, win_rate, atk_count, atk_win_rate, def_count, def_win_rate, rating])
