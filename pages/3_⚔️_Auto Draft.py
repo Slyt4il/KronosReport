@@ -42,10 +42,10 @@ def user_input_features():
     col1, col2 = st.columns(2)
 
     with col1:
-        d1 = st.selectbox('Position D1', strikers_options, index = 27, format_func=helper.convert_readable)
-        d2 = st.selectbox('Position D2', strikers_options, index = 23, format_func=helper.convert_readable)
+        d1 = st.selectbox('Position D1', strikers_options, index = 28, format_func=helper.convert_readable)
+        d2 = st.selectbox('Position D2', strikers_options, index = 24, format_func=helper.convert_readable)
         d3 = st.selectbox('Position D3', strikers_options, index = 17, format_func=helper.convert_readable)
-        d4 = st.selectbox('Position D4', strikers_options, index = 22, format_func=helper.convert_readable)
+        d4 = st.selectbox('Position D4', strikers_options, index = 23, format_func=helper.convert_readable)
         
     with col2:
         d5 = st.selectbox('Special D1', specials_options, index = 6, format_func=helper.convert_readable)
@@ -67,6 +67,12 @@ input_df = user_input_features()
 file_name = 'ss4_urban'
 students_raw = pd.read_csv('datasets/' + file_name + '.csv')
 students = students_raw.drop(columns=['d1', 'd2', 'd3', 'd4', 'd5', 'd6', 'attacker_won'])
+
+freq = students.groupby(students.columns.tolist()).size().reset_index().rename(columns={0: 'count'})
+filter = freq[freq['count'] < 3].drop('count', axis=1)
+merged = students.merge(filter, how='left', indicator=True)
+students = merged[merged['_merge'] == 'left_only'].drop('_merge', axis=1).reset_index().drop('index', axis=1)
+
 invalid = False
 if input_df is None:
     input_df = df = pd.DataFrame({'d1': 'shun', 'd2': 'tsubaki', 'd3': 'yuuka', 'd4': 'marina', 'd5': 'iroha', 'd6': 'utaha'}, index=[0])
@@ -87,9 +93,6 @@ prob = pd.DataFrame(model.predict_proba(df))
 prob.columns = prob.columns.astype(str)
 
 st.subheader('Best teams to break the formation')
-
-def path_to_image_html(path):
-    return '<img src="'+ path + '" width="60">'
 
 if not invalid:
     results = pd.concat([students.applymap(helper.convert_readable), prob.applymap(lambda num: "{:.2%}".format(num))], axis=1).drop('0', axis=1)

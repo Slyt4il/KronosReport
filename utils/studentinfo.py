@@ -18,6 +18,7 @@ strikers = {
     'kazusa': 10049,
     'marina': 10037,
     'miyako': 10038,
+    'momoi': 13011,
     'neru_(bunny)': 10026,
     'shiroko': 10010,
     'shiroko_(cycling)': 10024,

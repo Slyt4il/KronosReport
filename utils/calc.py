@@ -47,13 +47,15 @@ def calculate_ratings(df):
         ratings.append([student, pick_count, pick_rate, win_count, win_rate, atk_count, atk_win_rate, def_count, def_win_rate, rating])
     return ratings
 
-def recalculate():
-    update()
-    calculate_ratings(df)
 
 student_ratings = calculate_ratings(df)
 def get_ratings():
     return student_ratings
+
+def recalculate():
+    update()
+    global student_ratings
+    student_ratings = calculate_ratings(df)
 
 ############################################################################################
 
