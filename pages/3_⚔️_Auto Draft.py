@@ -68,11 +68,6 @@ file_name = 'ss4_urban'
 students_raw = pd.read_csv('datasets/' + file_name + '.csv')
 students = students_raw.drop(columns=['d1', 'd2', 'd3', 'd4', 'd5', 'd6', 'attacker_won'])
 
-freq = students.groupby(students.columns.tolist()).size().reset_index().rename(columns={0: 'count'})
-filter = freq[freq['count'] < 3].drop('count', axis=1)
-merged = students.merge(filter, how='left', indicator=True)
-students = merged[merged['_merge'] == 'left_only'].drop('_merge', axis=1).reset_index().drop('index', axis=1)
-
 invalid = False
 if input_df is None:
     input_df = df = pd.DataFrame({'d1': 'shun', 'd2': 'tsubaki', 'd3': 'yuuka', 'd4': 'marina', 'd5': 'iroha', 'd6': 'utaha'}, index=[0])
@@ -86,6 +81,12 @@ df['d5'] = np.where(df['d5'] < df['d6'], df['d5'] + '+' + df['d6'], df['d6'] + '
 columns_to_drop = ['a6', 'd6']
 df = df.drop(columns_to_drop, axis=1)
 
+freq = df.groupby(df.columns.tolist()).size().reset_index().rename(columns={0: 'count'})
+filter = freq[freq['count'] < 3].drop('count', axis=1)
+merged = df.merge(filter, how='left', indicator=True)
+df = merged[merged['_merge'] == 'left_only'].drop('_merge', axis=1).dropna()
+filtered_students = students.loc[students.index.intersection(df.index)].reset_index(drop=True)
+
 model = pickle.load(open('datasets/' + file_name + '_clf.pkl', 'rb'))
 
 pred = model.predict(df)
@@ -95,7 +96,7 @@ prob.columns = prob.columns.astype(str)
 st.subheader('Best teams to break the formation')
 
 if not invalid:
-    results = pd.concat([students.applymap(helper.convert_readable), prob.applymap(lambda num: "{:.2%}".format(num))], axis=1).drop('0', axis=1)
+    results = pd.concat([filtered_students.applymap(helper.convert_readable), prob.applymap(lambda num: "{:.2%}".format(num))], axis=1).drop('0', axis=1)
     sorted_df = results.sort_values(by='1', ascending=False).drop_duplicates()
     top = sorted_df.head(5)
     st.table(top)
