@@ -42,14 +42,18 @@ def user_input_features():
     col1, col2 = st.columns(2)
 
     with col1:
-        d1 = st.selectbox('Position D1', strikers_options, index = 28, format_func=helper.convert_readable)
-        d2 = st.selectbox('Position D2', strikers_options, index = 24, format_func=helper.convert_readable)
-        d3 = st.selectbox('Position D3', strikers_options, index = 17, format_func=helper.convert_readable)
-        d4 = st.selectbox('Position D4', strikers_options, index = 23, format_func=helper.convert_readable)
+        d1 = st.selectbox('Position D1', strikers_options, index = 33, format_func=helper.convert_readable)
+        d2 = st.selectbox('Position D2', strikers_options, index = 29, format_func=helper.convert_readable)
+        d3 = st.selectbox('Position D3', strikers_options, index = 21, format_func=helper.convert_readable)
+        d4 = st.selectbox('Position D4', strikers_options, index = 28, format_func=helper.convert_readable)
         
     with col2:
         d5 = st.selectbox('Special D1', specials_options, index = 6, format_func=helper.convert_readable)
         d6 = st.selectbox('Special D2', specials_options, index = 13, format_func=helper.convert_readable)
+        st.write('')
+        st.write('')
+        global exclude
+        exclude = st.checkbox('Exclude teams with small sample size', help='Teams that appear less than 3 times in the dataset will be excluded.', value=True)
         
     data = {'d1': d1, 'd2': d2, 'd3': d3, 'd4': d4, 'd5': d5, 'd6': d6}
 
@@ -81,11 +85,14 @@ df['d5'] = np.where(df['d5'] < df['d6'], df['d5'] + '+' + df['d6'], df['d6'] + '
 columns_to_drop = ['a6', 'd6']
 df = df.drop(columns_to_drop, axis=1)
 
-freq = df.groupby(df.columns.tolist()).size().reset_index().rename(columns={0: 'count'})
-filter = freq[freq['count'] < 3].drop('count', axis=1)
-merged = df.merge(filter, how='left', indicator=True)
-df = merged[merged['_merge'] == 'left_only'].drop('_merge', axis=1).dropna()
-filtered_students = students.loc[students.index.intersection(df.index)].reset_index(drop=True)
+if exclude:
+    freq = df.groupby(df.columns.tolist()).size().reset_index().rename(columns={0: 'count'})
+    filter = freq[freq['count'] < 3].drop('count', axis=1)
+    merged = df.merge(filter, how='left', indicator=True)
+    df = merged[merged['_merge'] == 'left_only'].drop('_merge', axis=1).dropna()
+    filtered_students = students.loc[students.index.intersection(df.index)].reset_index(drop=True)
+else:
+    filtered_students = students
 
 model = pickle.load(open('datasets/' + file_name + '_clf.pkl', 'rb'))
 
